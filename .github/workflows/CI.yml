@@ -1,0 +1,28 @@
+name: Build & Upload logs
+
+on:
+ push:
+  branches: [main]
+ pull_request:
+  branches: [main]
+
+jobs:
+ build-docker:
+
+  runs-on: ubuntu-latest
+
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+
+  - name: Build Docker image
+    run: docker build -t lab08 .
+
+  - name: Run Docker container
+    run: docker run --rm -v $(pwd):/src lab08
+
+  - name: Upload log as artifact
+    uses: actions/upload-artifact@v4
+    with:
+     name: build-log
+     path: logs/log.txt
